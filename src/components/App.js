@@ -1,16 +1,25 @@
 import React, { Component } from "react";
-import TasksList from "../containers/TasksList";
-import TaskForm from "../containers/TaskForm";
+import { BrowserRouter as Router, Route, NavLink } from "react-router-dom";
+import TasksPage from "../pages/Tasks";
 
 class App extends Component {
-  componentDidMount() {
-    this.props.onAppReady();
-  }
+  componentDidMount() {}
   render() {
     return (
       <div className="App">
-        <TasksList />
-        {this.props.isFormVisible && <TaskForm />}
+        <Router>
+          <div>
+            <nav class="mainNavigation">
+              <ul>
+                <li>
+                  <NavLink to="/">Tasks</NavLink>
+                </li>
+              </ul>
+            </nav>
+
+            <Route path="/" exact component={TasksPage} />
+          </div>
+        </Router>
       </div>
     );
   }
