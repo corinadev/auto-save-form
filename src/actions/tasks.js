@@ -12,11 +12,7 @@ import {
 } from "../constants/tasks";
 import { push } from "connected-react-router";
 import * as mockApi from "../mockBackendApi";
-
-/**
- * TODO Use actual user ids
- */
-const CURRENT_USER_ID = 123;
+import { DRAFT_ENTITY_TYPE } from "../constants/drafts";
 
 export const getTasks = () => {
   return dispatch => {
@@ -27,19 +23,22 @@ export const getTasks = () => {
   };
 };
 
-export const cancelAddEditTask = () => ({ type: ADD_EDIT_TASK_CANCELLED });
+export const cancelAddEditTask = () => {
+  return dispatch => {
+    dispatch({ type: ADD_EDIT_TASK_CANCELLED });
+    dispatch(push("/tasks"));
+  };
+};
 
 export const getTaskWithDraft = id => {
-  return dispatch => {
-    if (!id) {
-      dispatch({ type: GET_TASK_WITH_DRAFT_SUCCESS, task: null, draft: null });
-      return;
-    }
-
+  return (dispatch, getState) => {
     dispatch({ type: GET_TASK_WITH_DRAFT_LOADING, id });
+
+    const state = getState();
+    const userId = state.user.userId;
     return Promise.all([
-      mockApi.getTask(id),
-      mockApi.getDraft(id, mockApi.ENTITY_TYPE.TASK, CURRENT_USER_ID)
+      id ? mockApi.getTask(id) : Promise.resolve(null),
+      mockApi.getDraft(id, DRAFT_ENTITY_TYPE.TASK, userId)
     ]).then(result =>
       dispatch({
         type: GET_TASK_WITH_DRAFT_SUCCESS,

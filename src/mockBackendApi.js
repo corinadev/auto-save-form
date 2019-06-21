@@ -21,16 +21,10 @@ let latestDraftId = 0;
 const getLatestDraftId = () => ++latestDraftId;
 const drafts = [];
 
-export const ENTITY_TYPE = {
-  TASK: "TASK",
-  CASE: "CASE"
-};
-
 const delayedResponse = (url, returnValue) => {
-  console.log(`REQUEST ${url}`);
   return new Promise(resolve => {
     setTimeout(() => {
-      console.log(`RESPONSE ${url} =>> ${JSON.stringify(returnValue)}`);
+      console.log(`API | ${url} =>> ${JSON.stringify(returnValue)}`);
       resolve(returnValue);
     }, 500);
   });
@@ -44,15 +38,19 @@ export const getTask = id =>
   delayedResponse(`GET /api/tasks/${id}`, tasks.find(item => item.id === id));
 export const getCase = id =>
   delayedResponse(`GET /api/cases/${id}`, cases.find(item => item.id === id));
+
+const findUserDraftByEntityTypeAndId = (entityId, entityType, userId) => {
+  return drafts.find(
+    item =>
+      item.entityId === entityId &&
+      item.entityType === entityType &&
+      item.userId === userId
+  );
+};
 export const getDraft = (entityId, entityType, userId) =>
   delayedResponse(
-    `GET /api/drafts/user/${userId}/${entityType}/${entityId}`,
-    drafts.find(
-      item =>
-        item.entityId === entityId &&
-        item.entityType === entityType &&
-        item.useId === userId
-    )
+    `GET /api/drafts/user/${userId}/${entityType}/${entityId || ""}`,
+    findUserDraftByEntityTypeAndId(entityId, entityType, userId)
   );
 
 const saveItem = (itemType, items, item, getLatestId) => {
@@ -84,5 +82,15 @@ const saveItem = (itemType, items, item, getLatestId) => {
 export const saveTask = task => saveItem("tasks", tasks, task, getLatestTaskId);
 export const saveCase = caseInfo =>
   saveItem("cases", cases, caseInfo, getLatestCaseId);
-export const saveDraft = draft =>
-  saveItem("drafts", drafts, draft, getLatestDraftId);
+export const saveDraft = draft => {
+  const existingDraft = findUserDraftByEntityTypeAndId(
+    draft.entityId,
+    draft.entityType,
+    draft.userId
+  );
+
+  if (existingDraft) {
+    draft.id = existingDraft.id;
+  }
+  return saveItem("drafts", drafts, draft, getLatestDraftId);
+};

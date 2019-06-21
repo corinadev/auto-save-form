@@ -1,8 +1,9 @@
 import React, { Fragment } from "react";
-import AutoSaveForm from "./AutoSaveForm";
+import AutoSaveForm from "../containers/AutoSaveForm";
+import { DRAFT_ENTITY_TYPE } from "../constants/drafts";
 
 const AddEditTaskForm = props => (
-  <AutoSaveForm {...props}>
+  <AutoSaveForm entityType={DRAFT_ENTITY_TYPE.TASK} {...props}>
     {(values, handleChange) => (
       <Fragment>
         <div>
@@ -16,7 +17,11 @@ const AddEditTaskForm = props => (
         </div>
         <div>
           <label>Assignee</label>
-          <select name="assignee" value={values.assignee}>
+          <select
+            name="assignee"
+            value={values.assignee}
+            onChange={handleChange}
+          >
             <option value="Bob">Bob</option>
             <option value="John">John</option>
             <option value="Lewis">Lewis</option>
@@ -24,7 +29,12 @@ const AddEditTaskForm = props => (
         </div>
         <div>
           <label>Due date</label>
-          <input type="date" name="dueDate" value={values.dueDate} />
+          <input
+            type="date"
+            name="dueDate"
+            value={values.dueDate}
+            onChange={handleChange}
+          />
         </div>
       </Fragment>
     )}

@@ -34,10 +34,21 @@ class AutoSaveForm extends Component {
     this.props.onFormReady(this.props.entityId);
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     if (this.props.entityId !== prevProps.entityId) {
       this.props.onFormReady(this.props.entityId);
       this.setState({ userChanges: {} });
+    }
+
+    if (
+      JSON.stringify(this.state.userChanges) !==
+      JSON.stringify(prevState.userChanges)
+    ) {
+      this.props.onDraftChanged(
+        this.props.entityId,
+        this.props.entityType,
+        this.state.userChanges
+      );
     }
   }
 
@@ -67,7 +78,8 @@ class AutoSaveForm extends Component {
     this.props.onSave({ ...data, id: this.props.entityId });
   };
 
-  handleFormCancel = () => {
+  handleFormCancel = e => {
+    e.preventDefault();
     this.props.onCancel();
   };
 
@@ -77,11 +89,14 @@ class AutoSaveForm extends Component {
       return <div>Loading ...</div>;
     }
 
+    // TODO Make default values generic as well
     const initialFormValues = getInitialFormValues({
       draft: draft,
       entity: entity,
       defaultValues: {
-        description: ""
+        description: "",
+        dueDate: "",
+        assignee: ""
       }
     });
     const formData = {

@@ -1,0 +1,8 @@
+export const SAVE_DRAFT_LOADING = "SAVE_DRAFT_LOADING";
+export const SAVE_DRAFT_SUCCESS = "SAVE_DRAFT_SUCCESS";
+export const SAVE_DRAFT_ERROR = "SAVE_DRAFT_ERROR";
+
+export const DRAFT_ENTITY_TYPE = {
+  TASK: "TASK",
+  CASE: "CASE"
+};
