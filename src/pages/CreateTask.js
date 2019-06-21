@@ -1,11 +1,11 @@
 import React, { Fragment, Component } from "react";
-import TaskForm from "../containers/TaskForm";
+import AddEditTaskForm from "../containers/AddEditTaskForm";
 
 class CreateTaskPage extends Component {
   render() {
     return (
       <Fragment>
-        <TaskForm entityId={null} />
+        <AddEditTaskForm entityId={null} />
       </Fragment>
     );
   }

@@ -41,12 +41,13 @@ class AutoSaveForm extends Component {
     }
   }
 
-  handleDescriptionChanged = e => {
+  handleFieldChanged = e => {
+    const key = e.target.name;
     const value = e.target.value;
     this.setState(state => ({
       userChanges: {
         ...state.userChanges,
-        description: value
+        [key]: value
       }
     }));
   };
@@ -89,16 +90,13 @@ class AutoSaveForm extends Component {
     };
 
     return (
-      <div>
+      <div className="autoSaveForm">
         <form onSubmit={this.handleFormSubmit}>
-          <input
-            type="text"
-            name="description"
-            value={formData.description}
-            onChange={this.handleDescriptionChanged}
-          />
-          <button onClick={this.handleFormCancel}>Cancel</button>
-          <button type="submit">Save</button>
+          {this.props.children(formData, this.handleFieldChanged)}
+          <div>
+            <button onClick={this.handleFormCancel}>Cancel</button>
+            <button type="submit">Save</button>
+          </div>
         </form>
       </div>
     );

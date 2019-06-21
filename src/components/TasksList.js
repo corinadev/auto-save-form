@@ -1,16 +1,26 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import format from "date-fns/format";
 
 const TasksList = ({ tasks }) => (
   <div>
     <h1>Tasks</h1>
-    <ul>
+    <table className="tasksTable">
+      <tr>
+        <th>Description</th>
+        <th>Due</th>
+        <th>Assignee</th>
+      </tr>
       {tasks.map(task => (
-        <li key={task.id}>
-          <Link to={`/tasks/edit/${task.id}`}>{task.description}</Link>
-        </li>
+        <tr key={task.id}>
+          <td>
+            <Link to={`/tasks/edit/${task.id}`}>{task.description}</Link>
+          </td>
+          <td>{format(task.dueDate, "MM/DD/YYYY")}</td>
+          <td>{task.assignee}</td>
+        </tr>
       ))}
-    </ul>
+    </table>
     <Link to="/tasks/create">Add new</Link>
   </div>
 );

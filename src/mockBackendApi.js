@@ -55,12 +55,12 @@ export const getDraft = (entityId, entityType, userId) =>
     )
   );
 
-const saveItem = (items, item, getLatestId) => {
+const saveItem = (itemType, items, item, getLatestId) => {
   if (!item.id) {
     // Means we have a new item => add it
     item.id = getLatestId();
     return delayedResponse(
-      `POST /api/tasks ${JSON.stringify(item)}`,
+      `POST /api/${itemType} ${JSON.stringify(item)}`,
       items.push(item)
     );
   }
@@ -76,11 +76,13 @@ const saveItem = (items, item, getLatestId) => {
   const index = items.indexOf(toUpdate);
   items[index] = item;
   return delayedResponse(
-    `PUT /api/tasks/${item.id} ${JSON.stringify(item)}`,
+    `PUT /api/${itemType}/${item.id} ${JSON.stringify(item)}`,
     item
   );
 };
 
-export const saveTask = task => saveItem(tasks, task, getLatestTaskId);
-export const saveCase = caseInfo => saveCase(cases, caseInfo, getLatestCaseId);
-export const saveDraft = draft => saveDraft(drafts, draft, getLatestDraftId);
+export const saveTask = task => saveItem("tasks", tasks, task, getLatestTaskId);
+export const saveCase = caseInfo =>
+  saveItem("cases", cases, caseInfo, getLatestCaseId);
+export const saveDraft = draft =>
+  saveItem("drafts", drafts, draft, getLatestDraftId);

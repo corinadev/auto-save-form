@@ -1,4 +1,4 @@
-import AutoSaveForm from "../components/AutoSaveForm";
+import AddEditTaskForm from "../components/AddEditTaskForm";
 import { connect } from "react-redux";
 import {
   getTaskWithDraft,
@@ -21,4 +21,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(AutoSaveForm);
+)(AddEditTaskForm);

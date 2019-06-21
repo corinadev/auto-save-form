@@ -13,3 +13,24 @@
 .mainNavigation ul a.active {
   background-color: powderblue;
 }
+
+.autoSaveForm input,
+.autoSaveForm select {
+  margin: 5px;
+}
+
+.autoSaveForm form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.tasksTable {
+  margin: 30px 0;
+  border: 1px solid lightgray;
+}
+
+.tasksTable th,
+.tasksTable td {
+  padding: 10px;
+}
