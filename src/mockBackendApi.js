@@ -26,23 +26,27 @@ export const ENTITY_TYPE = {
   CASE: "CASE"
 };
 
-const delay = returnValue => {
+const delayedResponse = (url, returnValue) => {
+  console.log(`REQUEST ${url}`);
   return new Promise(resolve => {
-    console.log("REQUESTING ...", returnValue);
     setTimeout(() => {
+      console.log(`RESPONSE ${url} =>> ${JSON.stringify(returnValue)}`);
       resolve(returnValue);
     }, 500);
   });
 };
 
-export const getTasks = () => delay(tasks);
-export const getCases = () => delay(cases);
-export const getDrafts = () => delay(drafts);
+export const getTasks = () => delayedResponse("GET /api/tasks", tasks);
+export const getCases = () => delayedResponse("GET /api/cases", cases);
+export const getDrafts = () => delayedResponse("GET /api/drafts", drafts);
 
-export const getTask = id => delay(tasks.find(item => item.id === id));
-export const getCase = id => delay(cases.find(item => item.id === id));
+export const getTask = id =>
+  delayedResponse(`GET /api/tasks/${id}`, tasks.find(item => item.id === id));
+export const getCase = id =>
+  delayedResponse(`GET /api/cases/${id}`, cases.find(item => item.id === id));
 export const getDraft = (entityId, entityType, userId) =>
-  delay(
+  delayedResponse(
+    `GET /api/drafts/user/${userId}/${entityType}/${entityId}`,
     drafts.find(
       item =>
         item.entityId === entityId &&
@@ -55,7 +59,10 @@ const saveItem = (items, item, getLatestId) => {
   if (!item.id) {
     // Means we have a new item => add it
     item.id = getLatestId();
-    return delay(items.push(item));
+    return delayedResponse(
+      `POST /api/tasks ${JSON.stringify(item)}`,
+      items.push(item)
+    );
   }
 
   // Otherwise, we do an update
@@ -63,12 +70,15 @@ const saveItem = (items, item, getLatestId) => {
   if (!toUpdate) {
     // TODO Throw error here to simulate backend error
     console.error("Trying to update item with unkown ID", item);
-    return delay(null);
+    return delayedResponse("ERROR TODO", null);
   }
 
   const index = items.indexOf(toUpdate);
   items[index] = item;
-  return delay(item);
+  return delayedResponse(
+    `PUT /api/tasks/${item.id} ${JSON.stringify(item)}`,
+    item
+  );
 };
 
 export const saveTask = task => saveItem(tasks, task, getLatestTaskId);
