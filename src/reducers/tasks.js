@@ -2,10 +2,9 @@ import {
   GET_TASKS_LOADING,
   GET_TASKS_SUCCESS,
   GET_TASKS_ERROR,
-  OPEN_TASK_FORM,
-  CLOSE_TASK_FORM,
   GET_TASK_WITH_DRAFT_LOADING,
-  GET_TASK_WITH_DRAFT_SUCCESS
+  GET_TASK_WITH_DRAFT_SUCCESS,
+  SAVE_TASK_SUCCESS
 } from "../constants/tasks";
 
 const defaultFormState = {
@@ -19,7 +18,6 @@ const initialState = {
   tasks: [],
   isLoading: false,
   errorMessage: null,
-  isFormVisible: false,
   taskForm: null
 };
 
@@ -42,26 +40,12 @@ const tasksReducer = (state = initialState, action) => {
         isLoading: false,
         errorMessage: action.error
       };
-    case OPEN_TASK_FORM:
-      return {
-        ...state,
-        isFormVisible: true,
-        taskForm: {
-          ...defaultFormState,
-          taskId: action.id
-        }
-      };
-    case CLOSE_TASK_FORM:
-      return {
-        ...state,
-        isFormVisible: false,
-        taskForm: null
-      };
     case GET_TASK_WITH_DRAFT_LOADING:
       return {
         ...state,
         taskForm: {
-          ...state.taskForm,
+          ...defaultFormState,
+          taskId: action.id,
           isLoading: true
         }
       };
@@ -74,6 +58,11 @@ const tasksReducer = (state = initialState, action) => {
           task: action.task,
           draft: action.draft
         }
+      };
+    case SAVE_TASK_SUCCESS:
+      return {
+        ...state,
+        taskForm: null
       };
     default:
       return state;

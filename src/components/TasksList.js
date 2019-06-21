@@ -1,24 +1,17 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
-const TasksList = ({ tasks, onTaskSelected, onAddNewTaskClicked }) => (
+const TasksList = ({ tasks }) => (
   <div>
     <h1>Tasks</h1>
     <ul>
       {tasks.map(task => (
         <li key={task.id}>
-          <a
-            href="#"
-            onClick={e => {
-              e.preventDefault();
-              onTaskSelected(task.id);
-            }}
-          >
-            {task.description}
-          </a>
+          <Link to={`/tasks/edit/${task.id}`}>{task.description}</Link>
         </li>
       ))}
     </ul>
-    <button onClick={() => onAddNewTaskClicked()}>Add new</button>
+    <Link to="/tasks/create">Add new</Link>
   </div>
 );
 

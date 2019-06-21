@@ -2,16 +2,15 @@ import {
   GET_TASKS_LOADING,
   GET_TASKS_SUCCESS,
   GET_TASKS_ERROR,
-  OPEN_TASK_FORM,
-  CLOSE_TASK_FORM,
   GET_TASK_WITH_DRAFT_LOADING,
   GET_TASK_WITH_DRAFT_SUCCESS,
   GET_TASK_WITH_DRAFT_ERROR,
   SAVE_TASK_LOADING,
   SAVE_TASK_SUCCESS,
-  SAVE_TASK_ERROR
+  SAVE_TASK_ERROR,
+  ADD_EDIT_TASK_CANCELLED
 } from "../constants/tasks";
-
+import { push } from "connected-react-router";
 import * as mockApi from "../mockBackendApi";
 
 /**
@@ -28,8 +27,7 @@ export const getTasks = () => {
   };
 };
 
-export const openTaskForm = id => ({ type: OPEN_TASK_FORM, id });
-export const closeTaskForm = () => ({ type: CLOSE_TASK_FORM });
+export const cancelAddEditTask = () => ({ type: ADD_EDIT_TASK_CANCELLED });
 
 export const getTaskWithDraft = id => {
   return dispatch => {
@@ -37,7 +35,7 @@ export const getTaskWithDraft = id => {
       dispatch({ type: GET_TASK_WITH_DRAFT_SUCCESS, task: null, draft: null });
     }
 
-    dispatch({ type: GET_TASK_WITH_DRAFT_LOADING });
+    dispatch({ type: GET_TASK_WITH_DRAFT_LOADING, id });
     return Promise.all([
       mockApi.getTask(id),
       mockApi.getDraft(id, mockApi.ENTITY_TYPE.TASK, CURRENT_USER_ID)
@@ -56,8 +54,7 @@ export const saveTask = data => {
     dispatch({ type: SAVE_TASK_LOADING });
     return mockApi.saveTask(data).then(() => {
       dispatch({ type: SAVE_TASK_SUCCESS });
-      dispatch(getTasks());
-      dispatch(closeTaskForm());
+      dispatch(push("/tasks"));
     });
   };
 };

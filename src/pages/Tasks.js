@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import TasksList from "../containers/TasksList";
 import TaskForm from "../containers/TaskForm";
 import { connect } from "react-redux";
@@ -10,10 +10,10 @@ class TasksPage extends Component {
   }
   render() {
     return (
-      <div className="App">
+      <Fragment>
         <TasksList />
         {this.props.isFormVisible && <TaskForm />}
-      </div>
+      </Fragment>
     );
   }
 }
