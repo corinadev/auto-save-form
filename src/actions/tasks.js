@@ -33,6 +33,7 @@ export const getTaskWithDraft = id => {
   return dispatch => {
     if (!id) {
       dispatch({ type: GET_TASK_WITH_DRAFT_SUCCESS, task: null, draft: null });
+      return;
     }
 
     dispatch({ type: GET_TASK_WITH_DRAFT_LOADING, id });
